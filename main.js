@@ -1,45 +1,80 @@
-// arrayyy
+
 let colors = ['red', 'blue', 'green', 'yellow'];
-let score = 0; //set score to 0
+let score = 0;
+let correctColor;
 
 
-function startGame() {
-  // Generate randomIndex = random number from 0 to length of colors array - 1
-  let randomIndex = Math.floor(Math.random() * colors.length);
-  // Set correctColor = colors[randomIndex]
-  let correctColor = colors[randomIndex];
-
-  //  guessing right color
-  document.getElementById('message').innerHTML = `Guess the color: ${correctColor}`;
-  // card selection
-  document.getElementById('cards').style.pointerEvents = 'auto';
-
-  
-  for (let i = 1; i <= 4; i++) {
-    //set card colors
-    let card = document.getElementById(`card${i}`);
-    card.style.backgroundColor = colors[i - 1];
-  }
+function STARTGame() {
+    startNewRound();
 }
 
-function checkGuess(selectedCard) {
-  
-  let selectedColor = document.getElementById(selectedCard).style.backgroundColor;
-  let correctColor = document.getElementById('message').innerHTML.split(' ').pop();
 
+function startNewRound() {
   
-  if (selectedColor === correctColor) {
-    //add score
-    score++;
-    // show correct guesss
-    document.getElementById('message').innerHTML = 'Correct! Well done!';
-  } else {
-    // sho incorrect guess
-    document.getElementById('message').innerHTML = 'Incorrect. Try again!';
-  }
+    displayMessage('Guess the color!');
+    
+   
+    CardSelection();
 
-  // Update score 
-  document.getElementById('score').innerHTML = `Score: ${score}`;
-  // make the game sop til next round
-  document.getElementById('cards').style.pointerEvents = 'none';
+    
+    let cards = document.getElementsByClassName('card');
+    for (let i = 0; i < cards.length; i++) {
+        cards[i].style.backgroundColor = colors[i];
+    }
+    let randomIndex = getRandomIndex(colors.length);
+    correctColor = colors[randomIndex];
 }
+
+
+function checkGuess(selectedColor) {
+    if (selectedColor === correctColor) {
+        
+        score++;
+        displayMessage('Correct! Well done!');
+    } else {
+        displayMessage('Incorrect. Try again!');
+    }
+
+    
+    updateScore();
+
+    
+    stopCardSelection();
+}
+
+
+function displayMessage(message) {
+    document.getElementById('message').innerHTML = message;
+}
+
+
+function updateScore() {
+    document.getElementById('score').innerHTML = `Score: ${score}`;
+}
+
+
+function CardSelection() {
+    document.getElementById('cards').style.pointerEvents = 'auto';
+}
+
+
+function stopCardSelection() {
+    document.getElementById('cards').style.pointerEvents = 'none';
+}
+
+
+function getRandomIndex(max) {
+    return Math.floor(Math.random() * max);
+}
+
+
+function CardClick(cardId) {
+    let selectedColor = document.getElementById(cardId).style.backgroundColor;
+    checkGuess(selectedColor);
+}
+
+
+document.getElementById('startButton').addEventListener('click', startNewRound);
+
+
+STARTGame();
